@@ -18,7 +18,7 @@ public class RabbitConfig {
     @Value("${rabbitmq.file.exchange}")
     private String fileExchange;
 
-    
+
     @Value("${rabbitmq.auth.exchange}")
     private String authExchange;
 
@@ -39,16 +39,16 @@ public class RabbitConfig {
     @Value("${rabbitmq.places.exchange}")
     private String placesExchange;
 
-    @Value("${rabbitmq.file.institution.deleted.queue}")
+    @Value("${rabbitmq.institution.deleted.queue}")
     private String institutionDeletedQueue;
 
-    @Value("${rabbitmq.file.boarding.deleted.queue}")
+    @Value("${rabbitmq.boarding.deleted.queue}")
     private String boardingDeletedQueue;
 
-    @Value("${rabbitmq.file.institution.deleted.routing.key}")
+    @Value("${rabbitmq.institution.deleted.routing.key}")
     private String institutionDeletedRoutingKey;
 
-    @Value("${rabbitmq.file.boarding.deleted.routing.key}")
+    @Value("${rabbitmq.boarding.deleted.routing.key}")
     private String boardingDeletedRoutingKey;
 
 
@@ -56,10 +56,10 @@ public class RabbitConfig {
     @Value("${rabbitmq.transport.exchange}")
     private String transportExchange;
 
-    @Value("${rabbitmq.file.bus.deleted.queue}")
+    @Value("${rabbitmq.bus.deleted.queue}")
     private String busDeletedQueue;
 
-    @Value("${rabbitmq.file.bus.deleted.routing.key}")
+    @Value("${rabbitmq.bus.deleted.routing.key}")
     private String busDeletedRoutingKey;
 
     @Bean
