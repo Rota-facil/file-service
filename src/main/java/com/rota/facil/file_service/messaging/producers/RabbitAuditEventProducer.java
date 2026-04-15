@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class RabbitAuditProducer {
+public class RabbitAuditEventProducer {
     private final RabbitTemplate rabbitTemplate;
 
     @Value("${rabbitmq.file.exchange}")
