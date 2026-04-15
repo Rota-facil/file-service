@@ -1,6 +1,6 @@
 package com.rota.facil.file_service.messaging.producers;
 
-import com.rota.facil.file_service.messaging.dto.send.FileEventSend;
+import com.rota.facil.file_service.messaging.dto.send.AuditFileEventSend;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,15 +23,15 @@ public class RabbitAuditEventProducer {
     @Value("${rabbitmq.file.deleted.routing.key}")
     private String fileDeletedRoutingKet;
 
-    public void createFileEvent(FileEventSend fileEventSend) {
-        rabbitTemplate.convertAndSend(fileExchange, fileCreatedRoutingKet, fileEventSend);
+    public void createFileEvent(AuditFileEventSend auditFileEventSend) {
+        rabbitTemplate.convertAndSend(fileExchange, fileCreatedRoutingKet, auditFileEventSend);
     }
 
-    public void updateFileEvent(FileEventSend fileEventSend) {
-        rabbitTemplate.convertAndSend(fileExchange, fileUpdatedRoutingKet, fileEventSend);
+    public void updateFileEvent(AuditFileEventSend auditFileEventSend) {
+        rabbitTemplate.convertAndSend(fileExchange, fileUpdatedRoutingKet, auditFileEventSend);
     }
 
-    public void deleteFileEvent(FileEventSend fileEventSend) {
-        rabbitTemplate.convertAndSend(fileExchange, fileDeletedRoutingKet, fileEventSend);
+    public void deleteFileEvent(AuditFileEventSend auditFileEventSend) {
+        rabbitTemplate.convertAndSend(fileExchange, fileDeletedRoutingKet, auditFileEventSend);
     }
 }
