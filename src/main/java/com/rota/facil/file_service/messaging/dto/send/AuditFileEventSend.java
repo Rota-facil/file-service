@@ -6,7 +6,7 @@ import com.rota.facil.file_service.domain.enums.Role;
 
 import java.util.UUID;
 
-public record FileEventSend(
+public record AuditFileEventSend(
         UUID userId,
         Role role,
         String actionTitle,
