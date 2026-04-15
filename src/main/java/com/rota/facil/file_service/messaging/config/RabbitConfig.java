@@ -15,6 +15,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfig {
+    @Value("${rabbitmq.file.exchange}")
+    private String fileExchange;
+
+    
     @Value("${rabbitmq.auth.exchange}")
     private String authExchange;
 
@@ -82,6 +86,11 @@ public class RabbitConfig {
         simpleRabbitListenerContainerFactory.setConnectionFactory(connectionFactory);
         simpleRabbitListenerContainerFactory.setMessageConverter(messageConverter);
         return simpleRabbitListenerContainerFactory;
+    }
+
+    @Bean
+    public TopicExchange fileExchange() {
+        return new TopicExchange(fileExchange);
     }
 
     @Bean
