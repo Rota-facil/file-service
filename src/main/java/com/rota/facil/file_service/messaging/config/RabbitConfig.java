@@ -39,10 +39,10 @@ public class RabbitConfig {
     @Value("${rabbitmq.places.exchange}")
     private String placesExchange;
 
-    @Value("${rabbitmq.institution.deleted.queue}")
+    @Value("${rabbitmq.file.institution.deleted.queue}")
     private String institutionDeletedQueue;
 
-    @Value("${rabbitmq.boarding.deleted.queue}")
+    @Value("${rabbitmq.file.boarding.deleted.queue}")
     private String boardingDeletedQueue;
 
     @Value("${rabbitmq.institution.deleted.routing.key}")
@@ -56,7 +56,7 @@ public class RabbitConfig {
     @Value("${rabbitmq.transport.exchange}")
     private String transportExchange;
 
-    @Value("${rabbitmq.bus.deleted.queue}")
+    @Value("${rabbitmq.file.bus.deleted.queue}")
     private String busDeletedQueue;
 
     @Value("${rabbitmq.bus.deleted.routing.key}")
