@@ -1,0 +1,29 @@
+services:
+  file-database:
+    image: postgres:16
+    container_name: file-database
+    environment:
+      POSTGRES_DB: ${DATASOURCE_NAME}
+      POSTGRES_USER: ${DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - file-db-data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio
+    container_name: file-storage
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-admin123}
+    volumes:
+      - minio-data:/data
+
+volumes:
+  file-db-data:
+  minio-data:
