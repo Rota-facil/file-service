@@ -2,6 +2,7 @@ package com.rota.facil.file_service.buckets.minio.business;
 
 import com.rota.facil.file_service.buckets.minio.config.properties.MinioProperties;
 import io.minio.*;
+import io.minio.http.Method;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class MinioService {
             return minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .bucket(minioProperties.getBucketName())
+                            .method(Method.GET)
                             .expiry(1, TimeUnit.DAYS)
                             .object(path)
                             .build()

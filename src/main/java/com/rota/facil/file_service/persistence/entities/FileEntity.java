@@ -65,7 +65,7 @@ public class FileEntity {
     }
 
     public String generateFileUrl() {
-        return this.ownerType.getPath() + ownerId + this.fileCategory.getPath() + "/" + originalFilename + "_" + LocalDateTime.now();
+        return this.ownerType.getPath() + "/" + ownerId + this.fileCategory.getPath() + "/" + originalFilename + "_" + LocalDateTime.now();
     }
 
     public static FileEntity fetchNewFile(MultipartFile multipartFile, CurrentUser currentUser, UUID ownerId, UUID prefectureId, FileCategory fileCategory, OwnerType ownerType) {
