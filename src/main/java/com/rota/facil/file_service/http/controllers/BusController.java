@@ -22,7 +22,7 @@ public class BusController {
     @PostMapping("/{busId}")
     public ResponseEntity<FileResponseDTO> uploadBusPhotos(
             @AuthenticationPrincipal CurrentUser currentUser,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart(name = "file") MultipartFile multipartFile
     ) {
         return ResponseEntity.ok(fileService.upload(currentUser, multipartFile, FileCategory.BUS_PHOTO));
     }
@@ -44,7 +44,7 @@ public class BusController {
     public ResponseEntity<FileResponseDTO> updateBusPhoto(
             @PathVariable UUID fileId,
             @AuthenticationPrincipal CurrentUser currentUser,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart(name = "file") MultipartFile multipartFile
     ) {
         return ResponseEntity.ok(fileService.update(currentUser, fileId, multipartFile));
     }

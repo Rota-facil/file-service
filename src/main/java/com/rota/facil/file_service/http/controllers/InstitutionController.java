@@ -22,7 +22,7 @@ public class InstitutionController {
     @PostMapping
     public ResponseEntity<FileResponseDTO> uploadInstitutionPhotos(
             @AuthenticationPrincipal CurrentUser currentUser,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart(name = "file") MultipartFile multipartFile
     ) {
         return ResponseEntity.ok(fileService.upload(currentUser, multipartFile, FileCategory.INSTITUTION_PIC));
     }
@@ -46,7 +46,7 @@ public class InstitutionController {
     public ResponseEntity<FileResponseDTO> updateInstitutionPhoto(
             @PathVariable UUID fileId,
             @AuthenticationPrincipal CurrentUser currentUser,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart(name = "file") MultipartFile multipartFile
     ) {
         return ResponseEntity.ok(fileService.update(currentUser, fileId, multipartFile));
     }

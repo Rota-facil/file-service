@@ -22,7 +22,7 @@ public class BoardPointController {
     @PostMapping
     public ResponseEntity<FileResponseDTO> uploadBoardPointPhotos(
             @AuthenticationPrincipal CurrentUser currentUser,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart(name = "file") MultipartFile multipartFile
     ) {
         return ResponseEntity.ok(fileService.upload(currentUser, multipartFile, FileCategory.BOARD_POINT_PIC));
     }
@@ -46,7 +46,7 @@ public class BoardPointController {
     public ResponseEntity<FileResponseDTO> updateBoardPointPhoto(
             @PathVariable UUID fileId,
             @AuthenticationPrincipal CurrentUser currentUser,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart(name = "file") MultipartFile multipartFile
     ) {
         return ResponseEntity.ok(fileService.update(currentUser, fileId, multipartFile));
     }

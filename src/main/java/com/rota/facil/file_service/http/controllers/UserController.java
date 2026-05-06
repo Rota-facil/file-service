@@ -22,7 +22,7 @@ public class UserController {
     @PostMapping("/me/profile")
     public ResponseEntity<FileResponseDTO> uploadProfilePic(
             @AuthenticationPrincipal CurrentUser currentUser,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart(name = "file") MultipartFile multipartFile
     ) {
         return ResponseEntity.ok(fileService.uploadProfilePic(currentUser, multipartFile));
     }
@@ -30,7 +30,7 @@ public class UserController {
     @PostMapping("/me/documents")
     public ResponseEntity<FileResponseDTO> uploadDocuments(
             @AuthenticationPrincipal CurrentUser currentUser,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart(name = "file") MultipartFile multipartFile
     ) {
         return ResponseEntity.ok(fileService.upload(currentUser, multipartFile, FileCategory.DOCUMENT));
     }
@@ -54,7 +54,7 @@ public class UserController {
     public ResponseEntity<FileResponseDTO> updateDocument(
             @AuthenticationPrincipal CurrentUser currentUser,
             @PathVariable UUID documentId,
-            MultipartFile multipartFile
+            @RequestPart(name = "file") MultipartFile multipartFile
     ) {
         return ResponseEntity.ok(fileService.update(currentUser, documentId, multipartFile));
     }
