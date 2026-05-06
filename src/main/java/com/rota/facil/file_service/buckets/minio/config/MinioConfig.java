@@ -36,9 +36,9 @@ public class MinioConfig {
 
          if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
              minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
-             log.debug("bucket {} successfully created", bucketName);
+             log.info("bucket {} successfully created", bucketName);
          } else {
-             log.debug("bucket {} already exists", bucketName);
+             log.info("bucket {} already exists", bucketName);
          }
 
          return minioClient;
