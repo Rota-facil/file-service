@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS files_tb (
     owner_id UUID NOT NULL,
     creator_id UUID NOT NULL,
     prefecture_id UUID NOT NULL,
+    file_category VARCHAR(50) NOT NULL,
     owner_type VARCHAR(20) NOT NULL,
     mime_type VARCHAR(50) NOT NULL,
     file_size_bytes DOUBLE PRECISION NOT NULL,

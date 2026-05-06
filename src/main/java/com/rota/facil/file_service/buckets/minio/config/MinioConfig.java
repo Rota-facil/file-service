@@ -11,16 +11,16 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class MinioConfig {
-    @Value(value = "minio.secret.key")
+    @Value(value = "${minio.secret.key}")
     private String secretKey;
 
-    @Value(value = "minio.access.key")
+    @Value(value = "${minio.access.key}")
     private String accessKey;
 
-    @Value(value = "minio.url")
+    @Value(value = "${minio.url}")
     private String minioUrl;
 
-    @Value(value = "minio.bucket.name")
+    @Value(value = "${minio.bucket.name}")
     private String bucketName;
 
     @Bean
@@ -34,6 +34,7 @@ public class MinioConfig {
 
          if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
              minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+             System.out.println("buscket " + bucketName + "successfully created");
          } else {
              System.out.println("bucket " + bucketName + " already exists");
          }
