@@ -4,11 +4,13 @@ import com.rota.facil.file_service.buckets.minio.config.properties.MinioProperti
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+@Slf4j
 @Configuration
 public class MinioConfig {
     @Value(value = "${minio.secret.key}")
@@ -34,9 +36,9 @@ public class MinioConfig {
 
          if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
              minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
-             System.out.println("buscket " + bucketName + "successfully created");
+             log.debug("bucket {} successfully created", bucketName);
          } else {
-             System.out.println("bucket " + bucketName + " already exists");
+             log.debug("bucket {} already exists", bucketName);
          }
 
          return minioClient;
