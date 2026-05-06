@@ -1,15 +1,18 @@
 package com.rota.facil.file_service.messaging.consumers;
 
+import com.rota.facil.file_service.business.FileService;
 import com.rota.facil.file_service.messaging.dto.receive.TransportDeleteBusEventReceive;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class RabbitTransportEventConsumer {
-    // injeta um fileService para fazer as operacoes de lógica de negócio
+    private final FileService fileService;
 
     @RabbitListener(queues = "${rabbitmq.file.bus.deleted.queue}")
     public void handlerBusDeleted(TransportDeleteBusEventReceive transportDeleteBusEventReceive) {
-        // chamar um service para deletar os arquivos de onibus
+        fileService.deleteAllByOwner(transportDeleteBusEventReceive.busId());
     }
 }
