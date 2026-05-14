@@ -3,7 +3,7 @@ services:
     image: postgres:16
     container_name: file-database
     environment:
-      POSTGRES_DB: ${DATASOURCE_NAME}
+      POSTGRES_DB: ${FILE_DATASOURCE_NAME}
       POSTGRES_USER: ${DATASOURCE_USERNAME}
       POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
     ports:
