@@ -27,6 +27,7 @@ public class MinioService {
                             .bucket(minioProperties.getBucketName())
                             .object(path)
                             .stream(multipartFile.getInputStream(), multipartFile.getSize(), -1)
+                            .contentType(multipartFile.getContentType())
                             .build()
             );
 
