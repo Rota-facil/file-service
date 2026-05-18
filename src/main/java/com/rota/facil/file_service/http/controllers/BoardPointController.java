@@ -19,12 +19,13 @@ import java.util.UUID;
 public class BoardPointController {
     private final FileService fileService;
 
-    @PostMapping
+    @PostMapping("/{boardPointId}")
     public ResponseEntity<FileResponseDTO> uploadBoardPointPhotos(
+            @PathVariable UUID boardPointId,
             @AuthenticationPrincipal CurrentUser currentUser,
             @RequestPart(name = "file") MultipartFile multipartFile
     ) {
-        return ResponseEntity.ok(fileService.upload(currentUser, multipartFile, FileCategory.BOARD_POINT_PIC));
+        return ResponseEntity.ok(fileService.upload(currentUser, boardPointId, multipartFile, FileCategory.BOARD_POINT_PIC));
     }
 
     @GetMapping

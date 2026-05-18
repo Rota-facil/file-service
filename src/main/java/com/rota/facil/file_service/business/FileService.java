@@ -52,6 +52,13 @@ public class FileService {
     }
 
     @Transactional
+    public FileResponseDTO upload(CurrentUser currentUser, UUID ownerId, MultipartFile multipartFile, FileCategory fileCategory) {
+        FileEntity saved = fileRepository.save(FileEntity.fetchNewFile(multipartFile, currentUser, ownerId, currentUser.prefectureId(), fileCategory, fileCategory.getOwnerType()));
+        minioService.upload(multipartFile, saved.getFileUrl());
+        return fileMapper.map(saved);
+    }
+
+    @Transactional
     public FileResponseDTO update(CurrentUser currentUser, UUID fileId, MultipartFile multipartFile) {
         FileEntity fileFound = this.fetchEntity(currentUser, fileId);
 

@@ -19,12 +19,13 @@ import java.util.UUID;
 public class InstitutionController {
     private final FileService fileService;
 
-    @PostMapping
+    @PostMapping("/{institutionId}")
     public ResponseEntity<FileResponseDTO> uploadInstitutionPhotos(
+            @PathVariable UUID institutionId,
             @AuthenticationPrincipal CurrentUser currentUser,
             @RequestPart(name = "file") MultipartFile multipartFile
     ) {
-        return ResponseEntity.ok(fileService.upload(currentUser, multipartFile, FileCategory.INSTITUTION_PIC));
+        return ResponseEntity.ok(fileService.upload(currentUser, institutionId, multipartFile, FileCategory.INSTITUTION_PIC));
     }
 
     @GetMapping

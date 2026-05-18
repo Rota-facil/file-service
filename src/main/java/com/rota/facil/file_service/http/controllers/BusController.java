@@ -21,10 +21,11 @@ public class BusController {
 
     @PostMapping("/{busId}")
     public ResponseEntity<FileResponseDTO> uploadBusPhotos(
+            @PathVariable UUID busId,
             @AuthenticationPrincipal CurrentUser currentUser,
             @RequestPart(name = "file") MultipartFile multipartFile
     ) {
-        return ResponseEntity.ok(fileService.upload(currentUser, multipartFile, FileCategory.BUS_PHOTO));
+        return ResponseEntity.ok(fileService.upload(currentUser, busId, multipartFile, FileCategory.BUS_PHOTO));
     }
 
     @GetMapping("/{busId}")

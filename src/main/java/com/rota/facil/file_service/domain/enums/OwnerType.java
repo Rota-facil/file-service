@@ -9,7 +9,8 @@ public enum OwnerType {
     USER("/users"),
     BUS("/bus"),
     INSTITUTION("/institutions"),
-    BOARD_POINT("/board_points");
+    BOARD_POINT("/board_points"),
+    ROUTE("/routes");
 
     private final String path;
 }
