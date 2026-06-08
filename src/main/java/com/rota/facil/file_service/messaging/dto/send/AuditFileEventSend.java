@@ -9,6 +9,7 @@ import java.util.UUID;
 public record AuditFileEventSend(
         UUID userId,
         Role role,
+        String email,
         String actionTitle,
         ActionType actionType,
         ResourceName resourceName,
