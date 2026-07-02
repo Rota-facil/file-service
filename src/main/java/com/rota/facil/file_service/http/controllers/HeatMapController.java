@@ -4,6 +4,7 @@ import com.rota.facil.file_service.business.FileService;
 import com.rota.facil.file_service.domain.enums.FileCategory;
 import com.rota.facil.file_service.http.dto.request.CurrentUser;
 import com.rota.facil.file_service.http.dto.response.file.FileResponseDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/heat-map")
 @RequiredArgsConstructor
