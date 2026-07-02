@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "Audit Service",
+                title = "File Service",
                 version = "1.0"
         )
 )
