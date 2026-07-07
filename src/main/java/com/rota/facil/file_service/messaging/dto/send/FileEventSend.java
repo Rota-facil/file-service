@@ -9,7 +9,7 @@ import java.util.UUID;
 public record FileEventSend(
         UUID userId,
         Role role,
-        String email,
+        String userEmail,
         String actionTitle,
         ActionType actionType,
         ResourceName resourceName,
