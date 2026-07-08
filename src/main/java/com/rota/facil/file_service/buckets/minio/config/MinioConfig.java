@@ -22,6 +22,9 @@ public class MinioConfig {
     @Value(value = "${minio.url}")
     private String minioUrl;
 
+    @Value(value = "${minio.public.url:${minio.url}}")
+    private String minioPublicUrl;
+
     @Value(value = "${minio.bucket.name}")
     private String bucketName;
 
@@ -42,6 +45,14 @@ public class MinioConfig {
          }
 
          return minioClient;
+    }
+
+    @Bean
+    public MinioClient presignedMinioClient() {
+        return MinioClient.builder()
+                .credentials(accessKey, secretKey)
+                .endpoint(minioPublicUrl)
+                .build();
     }
 
     @Bean

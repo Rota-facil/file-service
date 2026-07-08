@@ -39,7 +39,7 @@ public class HeatMapController {
 
     @GetMapping("/{fileId}")
     public ResponseEntity<FileResponseDTO> fetchHeatPhoto(@PathVariable UUID fileId) {
-        return ResponseEntity.ok(fileService.fetchByIdAndCategory(fileId, FileCategory.BOARD_POINT_PIC));
+        return ResponseEntity.ok(fileService.fetchByIdAndCategory(fileId, FileCategory.ROUTE_BOARD_POINT_HEAT_MAP));
     }
 
     @PutMapping("/{fileId}")

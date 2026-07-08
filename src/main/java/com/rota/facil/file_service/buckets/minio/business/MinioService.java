@@ -5,8 +5,8 @@ import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
-import lombok.RequiredArgsConstructor;
 import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,10 +14,20 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@RequiredArgsConstructor
 public class MinioService {
     private final MinioProperties minioProperties;
     private final MinioClient minioClient;
+    private final MinioClient presignedMinioClient;
+
+    public MinioService(
+            MinioProperties minioProperties,
+            @Qualifier("minioClient") MinioClient minioClient,
+            @Qualifier("presignedMinioClient") MinioClient presignedMinioClient
+    ) {
+        this.minioProperties = minioProperties;
+        this.minioClient = minioClient;
+        this.presignedMinioClient = presignedMinioClient;
+    }
 
     @Named("upload")
     public void upload(MultipartFile multipartFile, String path) {
@@ -39,7 +49,7 @@ public class MinioService {
     @Named("getPresignedUrl")
     public String getPresignedUrl(String path) {
         try {
-            return minioClient.getPresignedObjectUrl(
+            return presignedMinioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .bucket(minioProperties.getBucketName())
                             .method(Method.GET)

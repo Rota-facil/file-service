@@ -54,8 +54,9 @@ public interface FileRepository extends JpaRepository<FileEntity, UUID> {
         SELECT f FROM FileEntity f
         WHERE f.ownerId = :ownerId
         AND f.fileCategory = :fileCategory
+        ORDER BY f.createdAt DESC
     """)
-    Optional<FileEntity> findAllByOwnerIdAndCategory(@Param("ownerId") UUID ownerId, @Param("fileCategory") FileCategory fileCategory);
+    List<FileEntity> findAllByOwnerIdAndCategory(@Param("ownerId") UUID ownerId, @Param("fileCategory") FileCategory fileCategory);
 
     @Query("""
         SELECT f FROM FileEntity f
