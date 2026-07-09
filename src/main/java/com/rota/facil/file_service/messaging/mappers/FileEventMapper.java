@@ -11,9 +11,12 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
 public interface FileEventMapper {
+    @Mapping(target = "userId", source = "currentUser.userId")
+    @Mapping(target = "prefectureId", source = "currentUser.prefectureId")
     @Mapping(target = "userEmail", source = "currentUser.email")
     @Mapping(target = "role", source = "currentUser.role")
     @Mapping(target = "actionTitle", expression = "java(currentUser.email() + actionType.getTitle() + entity.getOriginalFilename())")
     @Mapping(target = "resourceName", expression = "java(ResourceName.FILE)")
+    @Mapping(target = "resourceId", source = "entity.id")
     FileEventSend map(FileEntity entity, CurrentUser currentUser, ActionType actionType);
 }

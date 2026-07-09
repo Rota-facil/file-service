@@ -33,6 +33,7 @@ public class RabbitFileEventProducer {
         FileAuditAction auditAction = FileAuditAction.FILE_CREATED;
         FileCreatedEventSend eventSend = new FileCreatedEventSend(
                 currentUser.userId(),
+                currentUser.prefectureId(),
                 currentUser.role(),
                 currentUser.email(),
                 auditAction.title(currentUser.email(), fileEntity.getOriginalFilename()),
@@ -51,6 +52,7 @@ public class RabbitFileEventProducer {
         FileAuditAction auditAction = FileAuditAction.FILE_UPDATED;
         FileUpdatedEventSend eventSend = new FileUpdatedEventSend(
                 currentUser.userId(),
+                currentUser.prefectureId(),
                 currentUser.role(),
                 currentUser.email(),
                 auditAction.title(currentUser.email(), fileEntity.getOriginalFilename()),
@@ -69,6 +71,7 @@ public class RabbitFileEventProducer {
         FileAuditAction auditAction = FileAuditAction.FILE_DELETED;
         FileDeletedEventSend eventSend = new FileDeletedEventSend(
                 currentUser.userId(),
+                currentUser.prefectureId(),
                 currentUser.role(),
                 currentUser.email(),
                 auditAction.title(currentUser.email(), fileEntity.getOriginalFilename()),
