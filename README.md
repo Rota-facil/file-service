@@ -1,137 +1,64 @@
 # file-service
 
-Servico de arquivos do Rota Facil. Gerencia upload, metadados e remocao de arquivos associados a usuarios, onibus, instituicoes, pontos de embarque e mapas de calor.
-
-## Para que serve
-
-- Upload de foto de perfil.
-- Upload de documentos de usuario.
-- Upload de fotos de onibus.
-- Upload de fotos de instituicoes.
-- Upload de fotos de pontos de embarque.
-- Upload de arquivos de mapa de calor de rota.
-- Persistencia de metadados no PostgreSQL.
-- Armazenamento binario no MinIO.
-- Remocao em cascata por eventos de outros servicos.
+Serviço de arquivos do Rota Fácil. Mantém metadados no PostgreSQL, objetos no MinIO e remove arquivos relacionados quando recebe eventos de exclusão.
 
 ## Porta e base path
 
-- Aplicacao: `file-service`
 - Porta: `8088`
 - Context path: `/files`
 - Via gateway: `http://localhost:8080/files`
 
-## Endpoints principais
+## Endpoints
 
-Usuarios:
+Usuário autenticado:
 
-- `POST /files/users/me/profile`: upload de foto de perfil com multipart `file`.
-- `GET /files/users/me/profile`: busca foto de perfil.
-- `DELETE /files/users/me/profile/{profileId}`: remove foto de perfil.
-- `POST /files/users/me/documents`: upload de documento com multipart `file`.
-- `GET /files/users/me/documents`: lista documentos.
-- `GET /files/users/me/documents/{documentId}`: busca documento.
-- `PUT /files/users/me/documents/{documentId}`: substitui documento.
-- `DELETE /files/users/me/documents/{documentId}`: remove documento.
+- `POST /files/users/me/profile`, `GET /files/users/me/profile`, `DELETE /files/users/me/profile/{profileId}`.
+- `POST /files/users/me/documents`, `GET /files/users/me/documents`, `GET|PUT|DELETE /files/users/me/documents/{documentId}`.
 
-Onibus:
+Ônibus:
 
-- `POST /files/bus/{busId}`: upload de foto do onibus.
-- `GET /files/bus/{busId}`: lista fotos de onibus por categoria.
-- `GET /files/bus/{fileId}`: busca foto.
-- `PUT /files/bus/{fileId}`: substitui foto.
-- `DELETE /files/bus/{fileId}`: remove foto.
+- `POST /files/bus/{busId}`, `GET /files/bus/{busId}`.
+- `GET|PUT|DELETE /files/bus/{fileId}`.
 
-Instituicoes:
+Instituições e pontos:
 
-- `POST /files/institutions/{institutionId}`: upload de foto.
-- `GET /files/institutions`: lista todas as fotos de instituicoes.
-- `GET /files/institutions/{institutionId}/all`: lista fotos da instituicao.
-- `GET /files/institutions/{fileId}`: busca foto.
-- `PUT /files/institutions/{fileId}`: substitui foto.
-- `DELETE /files/institutions/{fileId}`: remove foto.
-
-Pontos de embarque:
-
-- `POST /files/board-points/{boardPointId}`: upload de foto.
-- `GET /files/board-points`: lista todas as fotos.
-- `GET /files/board-points/{boardPointId}/all`: lista fotos do ponto.
-- `GET /files/board-points/{fileId}`: busca foto.
-- `PUT /files/board-points/{fileId}`: substitui foto.
-- `DELETE /files/board-points/{fileId}`: remove foto.
+- `POST /files/institutions/{institutionId}`, `GET /files/institutions`, `GET /files/institutions/{institutionId}/all`, `GET|PUT|DELETE /files/institutions/{fileId}`.
+- `POST /files/board-points/{boardPointId}`, `GET /files/board-points`, `GET /files/board-points/{boardPointId}/all`, `GET|PUT|DELETE /files/board-points/{fileId}`.
 
 Mapas de calor:
 
-- `POST /files/heat-map/{routeId}`: upload de mapa de calor.
-- `GET /files/heat-map/{routeId}/all`: lista mapas de uma rota.
-- `GET /files/heat-map/{fileId}`: busca arquivo.
-- `PUT /files/heat-map/{fileId}`: substitui arquivo.
-- `DELETE /files/heat-map/{fileId}`: remove arquivo.
+- `POST /files/heat-map/{routeId}`
+- `GET /files/heat-map/{routeId}/all`
+- `GET|PUT|DELETE /files/heat-map/{fileId}`
 
-Infra:
+O `BusController` declara hoje dois GETs com o mesmo padrão `/bus/{id}` — um para listar por ônibus e outro para buscar arquivo. Essa colisão de mapeamento é um ponto conhecido e deve ser corrigida antes de depender desses dois GETs; os demais recursos distinguem listagem por `/{ownerId}/all` e arquivo por `/{fileId}`. Listagem e exclusão de mapas usadas pelo painel exigem `ADMIN/SUPERUSER` no gateway.
 
-- `GET /files/health-check`
-- `/files/v3/api-docs`
-- `/files/swagger-ui.html`
+Infra: `GET /files/health-check`, `/files/v3/api-docs`, `/files/swagger-ui.html`.
 
 ## Categorias
 
-- `PROFILE_PIC`
-- `DOCUMENT`
-- `BUS_PHOTO`
-- `INSTITUTION_PIC`
-- `BOARD_POINT_PIC`
-- `ROUTE_BOARD_POINT_HEAT_MAP`
-
-## MinIO
-
-Propriedades default:
-
-- `MINIO_URL=http://localhost:9000`
-- `MINIO_ROOT_USER=admin`
-- `MINIO_ROOT_PASSWORD=admin123`
-- `MINIO_BUCKET_NAME=rota-facil`
+`PROFILE_PIC`, `DOCUMENT`, `BUS_PHOTO`, `INSTITUTION_PIC`, `BOARD_POINT_PIC` e `ROUTE_BOARD_POINT_HEAT_MAP`.
 
 ## Eventos
 
-Publica em `file.events`:
+Publica `file.created`, `file.updated` e `file.deleted` em `file.events`.
 
-- `file.created`
-- `file.updated`
-- `file.deleted`
+Consome `user.deleted`, `prefecture.deleted`, `institution.deleted`, `boarding.deleted` e `bus.deleted` para limpeza em cascata.
 
-Consome eventos para limpeza:
+## Persistência e MinIO
 
-- `user.deleted`
-- `prefecture.deleted`
-- `institution.deleted`
-- `boarding.deleted`
-- `bus.deleted`
-
-## Banco de dados
-
-- Default: `jdbc:postgresql://localhost:5437/file_database`
-- Usuario default: `rota-facil`
-- Senha default: `admin`
+- Banco: `jdbc:postgresql://localhost:5437/file_database`
+- Usuário padrão: `rota-facil`
 - Migrations: `src/main/resources/db/migration`
+- MinIO padrão: `http://localhost:9000`, bucket `rota-facil`
+
+Variáveis: `FILE_DATASOURCE_URL`, `DATASOURCE_*`, `MINIO_URL`, `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD`, `MINIO_BUCKET_NAME`, `RABBITMQ_*` e `EUREKA_URL`.
 
 ## Como rodar
-
-Pre-requisitos:
-
-- Java 21.
-- PostgreSQL com banco `file_database`.
-- Eureka.
-- RabbitMQ.
-- MinIO com bucket configurado/criavel.
-
-Comando:
 
 ```bash
 cd file-service
 ./mvnw spring-boot:run
 ```
 
-## Especializacao
-
-Este servico e responsavel apenas por arquivos e seus metadados. Nao deve implementar regra de negocio de usuarios, rotas ou lugares alem de associar arquivos a donos/categorias.
+Requer Java 21, PostgreSQL, MinIO, Eureka e RabbitMQ.
