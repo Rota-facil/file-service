@@ -1,6 +1,6 @@
 package com.rota.facil.file_service.http.controllers;
 
-import com.rota.facil.file_service.business.FileService;
+import com.rota.facil.file_service.business.files.*;
 import com.rota.facil.file_service.domain.enums.FileCategory;
 import com.rota.facil.file_service.http.dto.request.CurrentUser;
 import com.rota.facil.file_service.http.dto.response.file.FileResponseDTO;
@@ -19,7 +19,11 @@ import java.util.UUID;
 @RequestMapping("/heat-map")
 @RequiredArgsConstructor
 public class HeatMapController {
-    private final FileService fileService;
+    private final UploadFileWithOwnerUseCase uploadFileWithOwnerUseCase;
+    private final ListFileByOwnerAndCategoryUseCase listFileByOwnerAndCategoryUseCase;
+    private final FetchFileByIdAndCategoryUseCase fetchFileByIdAndCategoryUseCase;
+    private final DeleteFileUseCase deleteFileUseCase;
+    private final UpdateFileUseCase updateFileUseCase;
 
     @PostMapping("/{routeId}")
     public ResponseEntity<FileResponseDTO> uploadHeatMap(
@@ -27,19 +31,19 @@ public class HeatMapController {
             @RequestPart(name = "file") MultipartFile file,
             @AuthenticationPrincipal CurrentUser currentUser
             ) {
-        return ResponseEntity.ok(fileService.upload(currentUser, routeId, file, FileCategory.ROUTE_BOARD_POINT_HEAT_MAP));
+        return ResponseEntity.ok(uploadFileWithOwnerUseCase.execute(currentUser, routeId, file, FileCategory.ROUTE_BOARD_POINT_HEAT_MAP));
     }
 
     @GetMapping("/{routeId}/all")
     public ResponseEntity<List<FileResponseDTO>> listAllRouteHeatMaps(
             @PathVariable UUID routeId
     ) {
-        return ResponseEntity.ok(fileService.listByOwnerIdAndCategory(routeId, FileCategory.ROUTE_BOARD_POINT_HEAT_MAP));
+        return ResponseEntity.ok(listFileByOwnerAndCategoryUseCase.execute(routeId, FileCategory.ROUTE_BOARD_POINT_HEAT_MAP));
     }
 
     @GetMapping("/{fileId}")
     public ResponseEntity<FileResponseDTO> fetchHeatPhoto(@PathVariable UUID fileId) {
-        return ResponseEntity.ok(fileService.fetchByIdAndCategory(fileId, FileCategory.ROUTE_BOARD_POINT_HEAT_MAP));
+        return ResponseEntity.ok(fetchFileByIdAndCategoryUseCase.execute(fileId, FileCategory.ROUTE_BOARD_POINT_HEAT_MAP));
     }
 
     @PutMapping("/{fileId}")
@@ -48,7 +52,7 @@ public class HeatMapController {
             @AuthenticationPrincipal CurrentUser currentUser,
             @RequestPart(name = "file") MultipartFile multipartFile
     ) {
-        return ResponseEntity.ok(fileService.update(currentUser, fileId, multipartFile));
+        return ResponseEntity.ok(updateFileUseCase.execute(currentUser, fileId, multipartFile));
     }
 
     @DeleteMapping("/{fileId}")
@@ -56,7 +60,7 @@ public class HeatMapController {
             @PathVariable UUID fileId,
             @AuthenticationPrincipal CurrentUser currentUser
     ) {
-        fileService.delete(currentUser, fileId);
+        deleteFileUseCase.execute(currentUser, fileId);
         return ResponseEntity.ok().build();
     }
 }

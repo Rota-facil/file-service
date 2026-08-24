@@ -1,6 +1,6 @@
 package com.rota.facil.file_service.messaging.consumers;
 
-import com.rota.facil.file_service.business.FileService;
+import com.rota.facil.file_service.business.files.DeleteAllFileByOwnerUseCase;
 import com.rota.facil.file_service.messaging.dto.receive.PlacesDeleteBoardEventReceive;
 import com.rota.facil.file_service.messaging.dto.receive.PlacesDeleteInstitutionEventReceive;
 import lombok.RequiredArgsConstructor;
@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RabbitPlacesEventConsumer {
-    private final FileService fileService;
+    private final DeleteAllFileByOwnerUseCase deleteAllFileByOwnerUseCase;
 
     @RabbitListener(queues = "${rabbitmq.file.institution.deleted.queue}")
     public void handlerInstitutionDeleted(PlacesDeleteInstitutionEventReceive placesDeleteInstitutionEventReceive) {
-        fileService.deleteAllByOwner(placesDeleteInstitutionEventReceive.institutionId());
+        deleteAllFileByOwnerUseCase.execute(placesDeleteInstitutionEventReceive.institutionId());
     }
 
     @RabbitListener(queues = "${rabbitmq.file.boarding.deleted.queue}")
     public void handlerBoardingDeleted(PlacesDeleteBoardEventReceive placesDeleteBoardEventReceive) {
-        fileService.deleteAllByOwner(placesDeleteBoardEventReceive.boardId());
+        deleteAllFileByOwnerUseCase.execute(placesDeleteBoardEventReceive.boardId());
     }
 }

@@ -1,6 +1,6 @@
 package com.rota.facil.file_service.http.controllers;
 
-import com.rota.facil.file_service.business.FileService;
+import com.rota.facil.file_service.business.files.*;
 import com.rota.facil.file_service.domain.enums.FileCategory;
 import com.rota.facil.file_service.http.dto.request.CurrentUser;
 import com.rota.facil.file_service.http.dto.response.file.FileResponseDTO;
@@ -19,7 +19,11 @@ import java.util.UUID;
 @RequestMapping("/bus")
 @RequiredArgsConstructor
 public class BusController {
-    private final FileService fileService;
+    private final UploadFileWithOwnerUseCase uploadFileWithOwnerUseCase;
+    private final DeleteFileUseCase deleteFileUseCase;
+    private final FetchFileByCurrentUserAndIdUseCase fetchFileByCurrentUserAndIdUseCase;
+    private final ListFileByCategory listFileByCategory;
+    private final UpdateFileUseCase updateFileUseCase;
 
     @PostMapping("/{busId}")
     public ResponseEntity<FileResponseDTO> uploadBusPhotos(
@@ -27,12 +31,12 @@ public class BusController {
             @AuthenticationPrincipal CurrentUser currentUser,
             @RequestPart(name = "file") MultipartFile multipartFile
     ) {
-        return ResponseEntity.ok(fileService.upload(currentUser, busId, multipartFile, FileCategory.BUS_PHOTO));
+        return ResponseEntity.ok(uploadFileWithOwnerUseCase.execute(currentUser, busId, multipartFile, FileCategory.BUS_PHOTO));
     }
 
     @GetMapping("/{busId}")
     public ResponseEntity<List<FileResponseDTO>> listBusPhotos() {
-        return ResponseEntity.ok(fileService.listByCategory(FileCategory.BUS_PHOTO));
+        return ResponseEntity.ok(listFileByCategory.execute(FileCategory.BUS_PHOTO));
     }
 
     @GetMapping("/{fileId}")
@@ -40,7 +44,7 @@ public class BusController {
             @PathVariable UUID fileId,
             @AuthenticationPrincipal CurrentUser currentUser
     ) {
-        return ResponseEntity.ok(fileService.fetch(currentUser, fileId));
+        return ResponseEntity.ok(fetchFileByCurrentUserAndIdUseCase.execute(currentUser, fileId));
     }
 
     @PutMapping("/{fileId}")
@@ -49,7 +53,7 @@ public class BusController {
             @AuthenticationPrincipal CurrentUser currentUser,
             @RequestPart(name = "file") MultipartFile multipartFile
     ) {
-        return ResponseEntity.ok(fileService.update(currentUser, fileId, multipartFile));
+        return ResponseEntity.ok(updateFileUseCase.execute(currentUser, fileId, multipartFile));
     }
 
     @DeleteMapping("/{fileId}")
@@ -57,7 +61,7 @@ public class BusController {
             @PathVariable UUID fileId,
             @AuthenticationPrincipal CurrentUser currentUser
     ) {
-        fileService.delete(currentUser, fileId);
+        deleteFileUseCase.execute(currentUser, fileId);
         return ResponseEntity.ok().build();
     }
 }

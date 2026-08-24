@@ -1,6 +1,6 @@
 package com.rota.facil.file_service.http.controllers;
 
-import com.rota.facil.file_service.business.FileService;
+import com.rota.facil.file_service.business.files.*;
 import com.rota.facil.file_service.domain.enums.FileCategory;
 import com.rota.facil.file_service.http.dto.request.CurrentUser;
 import com.rota.facil.file_service.http.dto.response.file.FileResponseDTO;
@@ -19,7 +19,12 @@ import java.util.UUID;
 @RequestMapping("/board-points")
 @RequiredArgsConstructor
 public class BoardPointController {
-    private final FileService fileService;
+    private final FetchFileByIdAndCategoryUseCase fetchFileByIdAndCategoryUseCase;
+    private final ListFileByCategory listFileByCategory;
+    private final ListFileByOwnerAndCategoryUseCase listFileByOwnerAndCategoryUseCase;
+    private final UpdateFileUseCase updateFileUseCase;
+    private final UploadFileWithOwnerUseCase uploadFileWithOwnerUseCase;
+    private final DeleteFileUseCase deleteFileUseCase;
 
     @PostMapping("/{boardPointId}")
     public ResponseEntity<FileResponseDTO> uploadBoardPointPhotos(
@@ -27,22 +32,22 @@ public class BoardPointController {
             @AuthenticationPrincipal CurrentUser currentUser,
             @RequestPart(name = "file") MultipartFile multipartFile
     ) {
-        return ResponseEntity.ok(fileService.upload(currentUser, boardPointId, multipartFile, FileCategory.BOARD_POINT_PIC));
+        return ResponseEntity.ok(uploadFileWithOwnerUseCase.execute(currentUser, boardPointId, multipartFile, FileCategory.BOARD_POINT_PIC));
     }
 
     @GetMapping
     public ResponseEntity<List<FileResponseDTO>> listAllBoardPointPhotos() {
-        return ResponseEntity.ok(fileService.listByCategory(FileCategory.BOARD_POINT_PIC));
+        return ResponseEntity.ok(listFileByCategory.execute(FileCategory.BOARD_POINT_PIC));
     }
 
     @GetMapping("/{boardPointId}/all")
     public ResponseEntity<List<FileResponseDTO>> listBoardPointPhotos(@PathVariable UUID boardPointId) {
-        return ResponseEntity.ok(fileService.listByOwnerIdAndCategory(boardPointId, FileCategory.BOARD_POINT_PIC));
+        return ResponseEntity.ok(listFileByOwnerAndCategoryUseCase.execute(boardPointId, FileCategory.BOARD_POINT_PIC));
     }
 
     @GetMapping("/{fileId}")
     public ResponseEntity<FileResponseDTO> fetchBoardPointPhoto(@PathVariable UUID fileId) {
-        return ResponseEntity.ok(fileService.fetchByIdAndCategory(fileId, FileCategory.BOARD_POINT_PIC));
+        return ResponseEntity.ok(fetchFileByIdAndCategoryUseCase.execute(fileId, FileCategory.BOARD_POINT_PIC));
     }
 
     @PutMapping("/{fileId}")
@@ -51,7 +56,7 @@ public class BoardPointController {
             @AuthenticationPrincipal CurrentUser currentUser,
             @RequestPart(name = "file") MultipartFile multipartFile
     ) {
-        return ResponseEntity.ok(fileService.update(currentUser, fileId, multipartFile));
+        return ResponseEntity.ok(updateFileUseCase.execute(currentUser, fileId, multipartFile));
     }
 
     @DeleteMapping("/{fileId}")
@@ -59,7 +64,7 @@ public class BoardPointController {
             @PathVariable UUID fileId,
             @AuthenticationPrincipal CurrentUser currentUser
     ) {
-        fileService.delete(currentUser, fileId);
+        deleteFileUseCase.execute(currentUser, fileId);
         return ResponseEntity.ok().build();
     }
 }

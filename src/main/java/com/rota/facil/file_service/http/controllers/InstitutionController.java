@@ -1,6 +1,6 @@
 package com.rota.facil.file_service.http.controllers;
 
-import com.rota.facil.file_service.business.FileService;
+import com.rota.facil.file_service.business.files.*;
 import com.rota.facil.file_service.domain.enums.FileCategory;
 import com.rota.facil.file_service.http.dto.request.CurrentUser;
 import com.rota.facil.file_service.http.dto.response.file.FileResponseDTO;
@@ -19,7 +19,12 @@ import java.util.UUID;
 @RequestMapping("/institutions")
 @RequiredArgsConstructor
 public class InstitutionController {
-    private final FileService fileService;
+    private final UploadFileWithOwnerUseCase uploadFileWithOwnerUseCase;
+    private final FetchFileByIdAndCategoryUseCase fetchFileByIdAndCategoryUseCase;
+    private final ListFileByCategory listFileByCategory;
+    private final ListFileByOwnerAndCategoryUseCase listFileByOwnerAndCategoryUseCase;
+    private final UpdateFileUseCase updateFileUseCase;
+    private final DeleteFileUseCase deleteFileUseCase;
 
     @PostMapping("/{institutionId}")
     public ResponseEntity<FileResponseDTO> uploadInstitutionPhotos(
@@ -27,22 +32,22 @@ public class InstitutionController {
             @AuthenticationPrincipal CurrentUser currentUser,
             @RequestPart(name = "file") MultipartFile multipartFile
     ) {
-        return ResponseEntity.ok(fileService.upload(currentUser, institutionId, multipartFile, FileCategory.INSTITUTION_PIC));
+        return ResponseEntity.ok(uploadFileWithOwnerUseCase.execute(currentUser, institutionId, multipartFile, FileCategory.INSTITUTION_PIC));
     }
 
     @GetMapping
     public ResponseEntity<List<FileResponseDTO>> listAllInstitutionPhotos() {
-        return ResponseEntity.ok(fileService.listByCategory(FileCategory.INSTITUTION_PIC));
+        return ResponseEntity.ok(listFileByCategory.execute(FileCategory.INSTITUTION_PIC));
     }
 
     @GetMapping("/{institutionId}/all")
     public ResponseEntity<List<FileResponseDTO>> listInstitutionPhotos(@PathVariable UUID institutionId) {
-        return ResponseEntity.ok(fileService.listByOwnerIdAndCategory(institutionId, FileCategory.INSTITUTION_PIC));
+        return ResponseEntity.ok(listFileByOwnerAndCategoryUseCase.execute(institutionId, FileCategory.INSTITUTION_PIC));
     }
 
     @GetMapping("/{fileId}")
     public ResponseEntity<FileResponseDTO> fetchInstitutionPhoto(@PathVariable UUID fileId) {
-        return ResponseEntity.ok(fileService.fetchByIdAndCategory(fileId, FileCategory.INSTITUTION_PIC));
+        return ResponseEntity.ok(fetchFileByIdAndCategoryUseCase.execute(fileId, FileCategory.INSTITUTION_PIC));
     }
 
     @PutMapping("/{fileId}")
@@ -51,7 +56,7 @@ public class InstitutionController {
             @AuthenticationPrincipal CurrentUser currentUser,
             @RequestPart(name = "file") MultipartFile multipartFile
     ) {
-        return ResponseEntity.ok(fileService.update(currentUser, fileId, multipartFile));
+        return ResponseEntity.ok(updateFileUseCase.execute(currentUser, fileId, multipartFile));
     }
 
     @DeleteMapping("/{fileId}")
@@ -59,7 +64,7 @@ public class InstitutionController {
             @PathVariable UUID fileId,
             @AuthenticationPrincipal CurrentUser currentUser
     ) {
-        fileService.delete(currentUser, fileId);
+        deleteFileUseCase.execute(currentUser, fileId);
         return ResponseEntity.ok().build();
     }
 
